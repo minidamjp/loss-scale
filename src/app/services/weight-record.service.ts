@@ -1,12 +1,27 @@
+import * as moment from 'moment-timezone';
+
 import { Injectable } from '@angular/core';
-import { WeightRecord } from '../model/weight-record';
+
+import { SavedWeightRecord, WeightRecord } from '../model/weight-record';
 import { TESTDATA } from './testdata';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WeightRecordService {
-  constructor() { }
+
+  weightRecordList: WeightRecord[] = [];
+
+  constructor() { 
+    const wr:SavedWeightRecord[] = JSON.parse(localStorage.getItem('weightRecord')??'[]');
+    for (const w of wr){
+      this.weightRecordList.push({
+        recordedAt: moment(w.recordedAt),
+        weight: w.weight,
+        absolute: true,
+      });
+    }
+  }
 
   /**
    * 全体重データの取得
@@ -16,7 +31,7 @@ export class WeightRecordService {
    */
   // eslint-disable-next-line no-unused-vars
   getAllWeightRecords(absolute?: boolean): WeightRecord[] {
-    return TESTDATA;
+    return this.weightRecordList;
   }
 
   /**
@@ -26,5 +41,15 @@ export class WeightRecordService {
    */
   // eslint-disable-next-line no-unused-vars
   addWeightRecord(weightRecord: WeightRecord) {
+    this.weightRecordList.push(weightRecord);
+    const ws:SavedWeightRecord[] = [];
+    for (const w of this.weightRecordList){
+      ws.push({
+        recordedAt: w.recordedAt.toISOString(),
+        weight: w.weight,
+      });
+    }
+    localStorage.setItem('weightRecord', JSON.stringify(ws));
+
   }
 }

@@ -18,6 +18,19 @@ export interface WeightRecord {
   weight: number;
   /**
    * absolute は体重が絶対値か相対値かを示します。
+   * true だったら絶対値、falseだったら相対値
    */
   absolute: boolean;
+}
+export interface SavedWeightRecord {
+  /**
+   * recordedAt は体重を記録した日時です。
+   * 分以下は実際には0になっています。
+   */
+  recordedAt: string;
+  /**
+   * weight は体重です。
+   * 絶対値の場合と相対値の場合のどちらもあります。
+   */
+  weight: number;
 }

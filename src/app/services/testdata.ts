@@ -1,4 +1,5 @@
 import * as moment from 'moment-timezone';
+
 import { WeightRecord } from '../model/weight-record';
 
 // Test data: ikedam's health care data
@@ -171,6 +172,11 @@ export const TESTDATA: WeightRecord[] = [
   {
     recordedAt: moment('2022-09-22T09:00:00Z'),
     weight: 71.9,
+    absolute: true,
+  },
+  {
+    recordedAt: moment('2022-09-26T09:30:00Z'),
+    weight: 73.0,
     absolute: true,
   },
 ];
