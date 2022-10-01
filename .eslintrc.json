@@ -35,8 +35,9 @@
             "style": "kebab-case"
           }
         ],
-        "quotes": ["error", "single", { "avoidEscape": true }],
+        "quotes": ["error", "single", { "avoidEscape": true, "allowTemplateLiterals": true }],
         "prefer-const": ["warn"],
+        "semi": ["error"],
         "@typescript-eslint/no-unused-vars": ["warn"]
       }
     },
