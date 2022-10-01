@@ -1,5 +1,6 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { PlotlyService } from 'angular-plotly.js';
+import { Subscription } from 'rxjs';
 import { WeightRecordService } from '../services/weight-record.service';
 
 @Component({
@@ -7,7 +8,7 @@ import { WeightRecordService } from '../services/weight-record.service';
   templateUrl: './weight-graph.component.html',
   styleUrls: ['./weight-graph.component.scss']
 })
-export class WeightGraphComponent {
+export class WeightGraphComponent implements OnDestroy, OnInit {
   public weightGraphData: Partial<Plotly.PlotData> = {
     x: [],
     y: [],
@@ -20,10 +21,31 @@ export class WeightGraphComponent {
     this.weightGraphData,
   ];
 
+  // 変更監視
+  private changeSubscription = new Subscription();
+
   constructor(
     private plotly: PlotlyService,
     private weightRecordService: WeightRecordService,
   ) {
+  }
+
+  ngOnInit(): void {
+    this.update();
+    // 新しいデータが追加されたら再描画
+    this.changeSubscription.add(this.weightRecordService.onChange().subscribe(() => {
+      this.update();
+    }));
+  }
+
+  ngOnDestroy(): void {
+    this.changeSubscription.unsubscribe();
+  }
+
+  /**
+   * グラフの再描画
+   */
+  update() {
     const weightRecordList = this.weightRecordService.getAllWeightRecords();
     const x: Date[] = [];
     const y: number[] = [];

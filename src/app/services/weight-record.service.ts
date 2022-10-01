@@ -3,6 +3,7 @@ import * as moment from 'moment-timezone';
 import { Injectable } from '@angular/core';
 
 import { SavedWeightRecord, WeightRecord } from '../model/weight-record';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,9 @@ import { SavedWeightRecord, WeightRecord } from '../model/weight-record';
 export class WeightRecordService {
 
   weightRecordList: WeightRecord[] = [];
+
+  // 変更があったことの通知用
+  protected change = new Subject<void>();
 
   constructor() { 
     const wr:SavedWeightRecord[] = JSON.parse(localStorage.getItem('weightRecord')??'[]');
@@ -20,6 +24,15 @@ export class WeightRecordService {
         absolute: true,
       });
     }
+  }
+
+  /**
+   * 変更の監視用
+   *
+   * @returns 変更があったときに発火する Observable。
+   */
+  onChange(): Observable<void> {
+    return this.change.asObservable();
   }
 
   /**
@@ -49,6 +62,7 @@ export class WeightRecordService {
       });
     }
     localStorage.setItem('weightRecord', JSON.stringify(ws));
-
+    // 変更の通知
+    this.change.next();
   }
 }
