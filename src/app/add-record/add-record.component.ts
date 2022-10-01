@@ -10,7 +10,7 @@ import { WeightRecordService } from '../services/weight-record.service';
   styleUrls: ['./add-record.component.scss']
 })
 export class AddRecordComponent {
-  recordedAt = moment().toISOString();
+  recordedAt = moment().add(30, 'm').startOf('hour').format('YYYY-MM-DD[T]HH:mm');
   weight = 0;
 
   constructor(
